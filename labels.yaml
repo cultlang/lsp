@@ -1,0 +1,77 @@
+labels: {
+    "where": {
+        "system": {
+            'color': 'green',
+            'labels': [
+            ],
+        },
+        "features": {
+            'color': 'green',
+            'labels': [
+            ],
+        },
+        "other": {
+            'color': 'teal',
+            'labels': [
+                {'name': "tests"},
+                {'name': "perfs"},
+                {'name': "examples"},
+                {'name': "docs"},
+            ],
+        },
+    },
+    "what": {
+        "kind": {
+            'color': 'purple-bright',
+            'labels': [
+                ### Redder is higher priority
+                {'name': "meta", 'color': 'purple-dark'},
+                {'name': "improvement", 'color-step': 2},
+                {'name': "refactor", 'color-step': 6},
+                {'name': "problem", 'color-step': 10},
+            ],
+        },
+        "priority": {
+            'color': 'red',
+            'labels': [
+                {'name': "critical", 'color-step': -1},
+                {'name': "low", 'color-step': 0},
+            ],
+        },
+    },
+    "who": {
+        "dev": {
+            'color': 'white-tint',
+            'labels': [
+                ### A 4x4 matrix of responsibilities
+                # Public/Open
+                {'name': "anyone", 'color-tint': "blue"},
+                # Public/Specifics
+                {'name': "intro", 'color-tint': "green"},
+                # Contrib/Open
+                {'name': "everyone", 'color-tint': "yellow"},
+                # Contrib/Specifics
+                {'name': "core", 'color-tint': "red"},
+            ],
+        },
+    },
+    "why": {
+        "closed": {
+            'color': 'black-tint',
+            'labels': [
+                {'name': "replaced", 'color-tint': "green"},
+                {'name': "duplicate", 'color-tint': "yellow"},
+                {'name': "wontfix", 'color-tint': "orange"},
+                {'name': "invalid", 'color-tint': "red"},
+            ],
+        },
+        "stalled": {
+            'color': 'grey-tint',
+            'labels': [
+                {'name': "design", 'color-tint': "blue"},
+                {'name': "dependencies", 'color-tint': "yellow"},
+                {'name': "external", 'color-tint': "red"},
+            ],
+        },
+    },
+}

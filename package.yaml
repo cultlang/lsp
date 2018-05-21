@@ -1,0 +1,62 @@
+id: Lsp
+namespace: Cultlang
+shortname: Lsp Serer for Cultlang
+version: "1.0.0"
+repo: https://github.com/cultlang/lsp
+entry-name: cultlsp
+dependencies:
+  - Util@OffByOneStudios
+  - Types@OffByOneStudios
+  - Lisp@OffByOneStudios
+  - Uv
+
+vendor-dependencies:
+  x86_64-pc-windows-msvccoff: []
+  x86_64-apple-macosx-macho: []
+  x86_64-pc-linux-gnu: []
+
+platform-dependencies:
+  x86_64-pc-windows-msvccoff:
+   - Iphlpapi.lib
+   - Psapi.lib
+   - Userenv.lib
+  x86_64-pc-windows-msvccoff: []
+  x86_64-apple-macosx-macho: []
+  x86_64-pc-linux-gnu: []
+
+platform-compile-flags:
+  x86_64-pc-windows-msvccoff:
+    - "/std:c++latest"
+  x86_64-apple-macosx-macho: 
+    - "-std=c++1z"
+    - "-stdlib=libc++"
+    - "-Wc++11-extensions"
+  x86_64-pc-linux-gnu: 
+    - "-std=gnu++1z"
+    - "-pthread"
+    - "-fpermissive"
+
+platform-link-flags:
+  x86_64-pc-windows-msvccoff:
+    - "/ignore:4099"
+    
+platform-defines:
+  x86_64-pc-windows-msvccoff:
+    _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS: yes
+  x86_64-apple-macosx-macho: {}
+  x86_64-pc-linux-gnu: {}
+  
+artifacts:
+  library:
+    primary: yes
+    kind: dll craft-types
+    files:
+      - src/**/*.*
+  test:
+    kind: test
+    files:
+      - test/**/*.*
+  entry:
+    kind: exe
+    files:
+      - entry/**/*.*
