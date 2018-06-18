@@ -5,9 +5,9 @@ version: "1.0.0"
 repo: https://github.com/cultlang/lsp
 entry-name: cultlsp
 dependencies:
-  - Util@OffByOneStudios
-  - Types@OffByOneStudios
-  - Lisp@OffByOneStudios
+  - Util
+  - Types
+  - Lisp
   - Uv
 
 vendor-dependencies:
