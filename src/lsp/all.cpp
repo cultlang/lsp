@@ -1,4 +1,4 @@
-#include "uv/common.h"
+#include "lsp/common.h"
 
 #include "all.h"
 
@@ -8,7 +8,6 @@
 using namespace craft;
 using namespace craft::lisp;
 using namespace craft::types;
-using namespace cultlang::uv;
 
 namespace _impl {
 	//https://www.codeguru.com/cpp/cpp/algorithms/strings/article.php/c12759/URI-Encoding-and-Decoding.htm
@@ -220,5 +219,5 @@ instance<Module> cultlang::lsp::make_lsp_bindings(craft::instance<craft::lisp::N
 	return ret;
 }
 
-BuiltinModuleDescription cultlang::uv::BuiltinUv("cult/lsp", cultlang::lsp::make_lsp_bindings);
+BuiltinModuleDescription cultlang::lsp::BuiltinLsp("cult/lsp", cultlang::lsp::make_lsp_bindings);
 #include "types/dll_entry.inc"

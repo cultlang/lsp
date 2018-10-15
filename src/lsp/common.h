@@ -31,5 +31,4 @@
 #include "util/all.h"
 #include "types/core.h"
 #include "lisp/lisp.h"
-#include "uv/all.h"
 
