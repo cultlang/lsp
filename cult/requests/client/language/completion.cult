@@ -1,0 +1,16 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define completion (function (context request) (do
+  (define stdout (map/get context "stdout"))
+  (define res (lsp/dumpsymbols))
+  (uv/stream/write stdout 
+    (lsp/makeResponse (string {
+      "id" (map/get request "id")
+      "result" {
+        "isIncomplete" false
+        "items" res
+      } 
+    }))
+  )
+)))

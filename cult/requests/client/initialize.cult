@@ -1,0 +1,71 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define data {
+  "capabilities" {
+    "textDocumentSync" {
+      "openClose" true
+      "willSave" true
+      "willSaveWaitUntil" true
+      "save" {
+        "includeText" false
+      }
+    }
+	  "hoverProvider" true
+	  "completionProvider" {
+      "triggerCharacters" [ "(" ]
+    }
+    "signatureHelpProvider" {
+      "triggerCharacters" [
+
+      ]
+    }
+    "definitionProvider" false
+    "typeDefinitionProvider" false
+    "implementationProvider" false
+    "referencesProvider" false
+    "documentHighlightProvider" false
+    "documentSymbolProvider" false
+    "workspaceSymbolProvider" false
+    "codeActionProvider" true
+    "codeLensProvider" false
+    "documentFormattingProvider" false
+    "documentRangeFormattingProvider" false
+
+    ; "documentOnTypeFormattingProvider" {
+    ;   "firstTriggerCharacter" "a"
+    ;   "moreTriggerCharacter" [
+    ;     "s"
+    ;   ]
+    ; }
+    
+    "renameProvider" false
+    
+    ; "documentLinkProvider" {
+    ;   "resolveProvider" true
+    ; }
+
+    ; "colorProvider" {
+
+    ; }
+    
+    "executeCommandProvider" {
+      "commands" [
+        "evalFile"
+        "evalSelection"
+      ]
+    }
+
+    "workspace" {
+      
+      "workspaceFolders" {
+        "supported" false
+        "changeNotifications" false
+      }
+    }
+  }
+})
+
+(define initialize (function (context request) 
+  (uv/stream/write (map/get context "stdout") (lsp/makeResponse (string {"id" (map/get request "id") "result" data})))
+))

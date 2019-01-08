@@ -1,0 +1,15 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define hover (function (context request) (do
+    (define stdout (map/get context "stdout"))
+    (uv/stream/write stdout 
+      (lsp/makeResponse (string {
+        "id" (map/get request "id")
+        "result" {
+          "contents" "## A Hover"
+        }
+      }))
+    )  
+  )
+))

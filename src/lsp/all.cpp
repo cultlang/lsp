@@ -128,27 +128,25 @@ namespace _impl {
 	}
 }
 
-instance<Module> cultlang::lsp::make_lsp_bindings(craft::instance<craft::lisp::Namespace> ns, craft::instance<> loader)
+void cultlang::lsp::make_bindings(craft::instance<craft::lisp::Module> ret)
 {
-	auto ret = instance<Module>::make(ns, loader);
-	auto sem = instance<CultSemantics>::make(ret);
-	ret->builtin_setSemantics(sem);
+	auto sem = ret->require<lisp::CultSemantics>();
 
 	sem->builtin_implementMultiMethod("lsp/safe-require", [](instance<std::string> file) {
-		try
-		{
-			ScopeManipulation::Require(fmt::format("file:{0}", *file));
-		}
-		catch(stdext::exception e)
-		{
-			return instance<std::string>::make(e.what());
-		}
-		catch (std::exception e)
-		{
-			return instance<std::string>::make(e.what());
-		}
+		// try
+		// {
+		// 	ScopeManipulation::Require(fmt::format("file:{0}", *file));
+		// }
+		// catch(stdext::exception e)
+		// {
+		// 	return instance<std::string>::make(e.what());
+		// }
+		// catch (std::exception e)
+		// {
+		// 	return instance<std::string>::make(e.what());
+		// }
 
-		return instance<std::string>::make("Module Loaded");
+		// return instance<std::string>::make("Module Loaded");
 	});
 	sem->builtin_implementMultiMethod("lsp/uri/scheme", [](instance<std::string> s) {
 		std::smatch sm;
@@ -202,22 +200,22 @@ instance<Module> cultlang::lsp::make_lsp_bindings(craft::instance<craft::lisp::N
 	sem->builtin_implementMultiMethod("lsp/dumpsymbols",
 		[]()
 	{
-		auto ns = Execution::getCurrent()->getNamespace();
-		auto d = ns->symbolStore.expensivedump();
-		auto res = instance<lisp::library::List>::make();
-		for (auto i : d) {
-			auto m = instance<lisp::library::Map>::make();
-			m->insert(instance<std::string>::make("label"), i);
-			m->insert(instance<std::string>::make("kind"), instance<int32_t>::make(3));
-			m->insert(instance<std::string>::make("detail"), i);
+		// auto ns = Execution::getCurrent()->getNamespace();
+		// auto d = ns->symbolStore.expensivedump();
+		// auto res = instance<lisp::library::List>::make();
+		// for (auto i : d) {
+		// 	auto m = instance<lisp::library::Map>::make();
+		// 	m->insert(instance<std::string>::make("label"), i);
+		// 	m->insert(instance<std::string>::make("kind"), instance<int32_t>::make(3));
+		// 	m->insert(instance<std::string>::make("detail"), i);
 
-			res->push(m);
-		}
-		return res;
+		// 	res->push(m);
+		// }
+		return;
 	});
 
-	return ret;
+	return;
 }
 
-BuiltinModuleDescription cultlang::lsp::BuiltinLsp("cult/lsp", cultlang::lsp::make_lsp_bindings);
+BuiltinModuleDescription cultlang::lsp::BuiltinLsp("extensions/lsp", cultlang::lsp::make_bindings);
 #include "types/dll_entry.inc"

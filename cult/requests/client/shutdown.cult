@@ -1,0 +1,14 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define shutdown (function (context request) (do
+    (define loop (map/get context "loop"))
+    (define stdout (map/get context "stdout"))
+    (uv/stream/write stdout 
+      (lsp/makeResponse (string {
+        "id" (map/get request "id")
+        "contents" null
+      }))
+    )  
+  )
+))

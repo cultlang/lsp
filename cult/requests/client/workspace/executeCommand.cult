@@ -1,0 +1,21 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define executeCommand (function (context request) 
+  (do
+    (define stdout (map/get context "stdout"))
+    (define logMessage (map/get (map/get context "handlers") "window/logMessage"))
+    (logMessage context {
+      "params" {
+        "type" 3
+        "message" "2 + 2 = 4 - 1 that's 3 quick math"
+      }
+    })
+    (uv/stream/write stdout 
+      (lsp/makeResponse (string {
+        "id" (map/get request "id")
+        "result" "2 + 2 = 4 - 1 that's 3 quick math"
+      }))
+    ) 
+  )
+))

@@ -1,0 +1,13 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define exit_ (function (context request) (do
+  (define logMessage (map/get (map/get context "handlers") "window/logMessage"))
+  (logMessage context {
+    "params" {
+      "type" 3
+      "message" "Interpreter Will Exit"
+    }
+  })
+)
+))

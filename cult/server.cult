@@ -1,0 +1,102 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(ns/import "file:./notifications/server/logMessage.cult")
+
+(ns/import "file:./notifications/client/textDocument/didChange.cult")
+(ns/import "file:./notifications/client/textDocument/didClose.cult")
+(ns/import "file:./notifications/client/textDocument/didOpen.cult")
+(ns/import "file:./notifications/client/textDocument/didSave.cult")
+(ns/import "file:./notifications/client/textDocument/willSave.cult")
+(ns/import "file:./notifications/client/textDocument/willSaveUntil.cult")
+
+(ns/import "file:./notifications/client/exit.cult")
+(ns/import "file:./notifications/client/initialized.cult")
+
+(ns/import "file:./requests/client/initialize.cult")
+(ns/import "file:./requests/client/shutdown.cult")
+
+(ns/import "file:./requests/client/workspace/didChangeConfiguration.cult")
+(ns/import "file:./requests/client/workspace/executeCommand.cult")
+
+(ns/import "file:./requests/client/language/completion.cult")
+(ns/import "file:./requests/client/language/codeAction.cult")
+(ns/import "file:./requests/client/language/hover.cult")
+
+(define handlers {
+	"textDocument/didChange" didChange
+	"textDocument/didClose" didClose
+	"textDocument/didOpen" didOpen
+	"textDocument/didSave" didSave
+	"textDocument/willSave" willSave
+	"textDocument/willSaveUntil" willSaveUntil
+	"window/logMessage" logMessage
+	"exit" exit_
+	"initialized" initialized
+
+	"workspace/executeCommand" executeCommand
+	"workspace/didChangeConfiguration" didChangeConfiguration
+
+	"textDocument/completion" completion
+	"textDocument/codeAction" codeAction
+	;"textDocument/hover" hover
+
+	"initialize" initialize
+	"shutdown" shutdown
+
+	"$/cancelRequest" (function (data stdin) null)
+})
+
+(define loop (uv/loop))
+(define stdout (uv/stdout loop))
+(define stdin (uv/stdin loop))
+
+(define pHandlers (uv/stream))
+
+(uv/stream/data pHandlers (function (data stdin)
+	(do
+		(define sdata (string data))
+		(define body  "")
+		(while (lsp/body sdata body)
+			(cond
+				(== (string/length body) 0u64)
+				(do
+					(define res {"id" "0" "error" { "code" -32700 "message" "Parse Request Error"}})
+					(uv/stream/write stdout (lsp/makeResponse (string res)))
+				)
+				(do
+					(define request (json body))
+					(define handler (map/get handlers (map/get request "method")))
+					(cond (truth handler)
+						(do
+							(define context {
+								"loop" loop
+								"stdout" stdout
+								"handlers" handlers
+							})
+							(handler context request)
+						)
+						(do
+							(uv/stream/write stdout (lsp/makeResponse (string {"id" (map/get request "id") "error" { "code" -32601 "message" (format "No Such method %{0}" (map/get request "method"))}})))
+						)
+					)
+				)
+			)
+		)
+	)
+))
+
+(uv/stream/context stdin pHandlers)
+
+(define oHandlers (uv/stream))
+
+; (uv/stream/write oHandlers (function (data stdout)
+;   (do
+;     (uv/stream/read stdin)
+;   )
+; ))
+
+(uv/stream/context stdout oHandlers)
+
+(uv/stream/read stdin)
+(uv/run loop)

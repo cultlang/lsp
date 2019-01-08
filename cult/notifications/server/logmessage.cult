@@ -1,0 +1,12 @@
+(ns/import "builtin:extensions/uv")
+(ns/import "builtin:extensions/lsp")
+
+(define logMessage (function (context request) (do
+  (define stdout (map/get context "stdout"))
+  (uv/stream/write stdout 
+    (lsp/makeResponse (string {
+      "method" "window/logMessage"
+      "params" (map/get request "params")
+    }))
+  )
+)))
